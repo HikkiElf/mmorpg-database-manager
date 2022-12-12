@@ -1,0 +1,32 @@
+﻿<Window x:Class="SQLWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SQLWPF"
+        mc:Ignorable="d"
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        
+        Title="MMORPG db manager" Height="750" Width="900" WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize">
+    <Grid>
+        <Border Name="mainBorder" MinWidth="650" MinHeight="500" MaxHeight="600" MaxWidth="750" Margin="5,70,1,0" Background="#FFF8FFFF" VerticalAlignment="Top" Padding="40" CornerRadius="20" Height="614">
+            <UIElement.Effect>
+                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0" />
+            </UIElement.Effect>
+            <Grid Name="mainGrid" Margin="0,0,-4,0" Height="474">
+                <TextBlock x:Name="TableName" Text="Acounts" Grid.Row="0" Style="{StaticResource MaterialDesignBody1TextBlock}" FontSize="22" Margin="90,0,214,408" RenderTransformOrigin="0.581,0.513" FontWeight="Bold"/>
+                <Button Name="buttonExit" Content="Выход" Margin="25,436,576,6" Foreground="#FFFFFFFF" Background="#FFE2E2E2" BorderBrush="#FFFFFFFF" />
+                <Button Name="buttonReturn" Content="Вернуться" Margin="11,399,556,43" Background="#FFE0E0E0" Foreground="#FFFFFFFF" BorderBrush="#FFFFFFFF" FontWeight="Bold" />
+                <Button Name="buttonClearHistory" Content="Очистить Историю" Margin="498,399,10,43" Background="#FFE0E0E0" Foreground="#FF1D1616" BorderBrush="#FFFFFFFF" FontWeight="Bold" />
+                <DataGrid Name="ListHistory" HorizontalAlignment="Center" Height="333" Margin="0,46,0,0" VerticalAlignment="Top" Width="654" AutoGenerateColumns="True" Style="{StaticResource MaterialDesignDataGrid}" Background="#FFF8FFFF"/>
+                <ComboBox x:Name="TablesCombo" HorizontalAlignment="Left" Margin="460,16,0,0" VerticalAlignment="Top" Width="166" SelectionChanged="TablesCombo_SelectionChanged"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
