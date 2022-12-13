@@ -13,7 +13,7 @@
         FontFamily="{materialDesign:MaterialDesignFont}"
         
         mc:Ignorable="d"
-        Title="LogInWindow" MinHeight="750" MinWidth="900" Height="750" Width="900" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResize">
+        Title="LogInWindow" MinHeight="750" MinWidth="900" Height="750" Width="900" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="31*"/>

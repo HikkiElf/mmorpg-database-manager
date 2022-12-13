@@ -28,13 +28,11 @@ namespace SQLWPF
     /// </summary>
     public partial class LogInWindow : Window
     {
-        private List<string> allNames = new List<string>();
-        private List<string> allPasswords = new List<string>();
+        private List<string> allData = new List<string>();
 
         public LogInWindow()
         {
             InitializeComponent();
-            ValidationMethod();
         }
 
         private void ValidationMethod()
@@ -50,34 +48,21 @@ namespace SQLWPF
                     return;
                 }
 
-                SqlCommand takeAllNames = new SqlCommand
+                SqlCommand takeData = new SqlCommand
                 {
                     Connection = connection,
-                    CommandText = "SELECT accountName FROM Accounts"
+                    CommandText = $"SELECT accountName, accountPasswd FROM Accounts WHERE accountName = '{AccountNameField.Text}' and accountPasswd = '{PasswordField.Password}'"
                 };
 
-                SqlDataReader readerNames = takeAllNames.ExecuteReader();
-                while(readerNames.Read())
+                SqlDataReader readerData = takeData.ExecuteReader();
+                while(readerData.Read())
                 {
-                    allNames.Add((string)readerNames[0]);
+                    allData.Add((string)readerData[0]);
+                    allData.Add((string)readerData[1]);
                 }
-                var message = string.Join(Environment.NewLine, allNames);
+                var message = string.Join(Environment.NewLine, allData);
                 MessageBox.Show(message);
-                readerNames.Close();
-
-                SqlCommand takeAllPasswords = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = "SELECT accountPasswd FROM Accounts"
-                };
-
-                SqlDataReader readerPasswords = takeAllPasswords.ExecuteReader();
-                while (readerPasswords.Read())
-                {
-                    allPasswords.Add((string)readerPasswords[0]);
-                }
-                message = string.Join(Environment.NewLine, allPasswords);
-                MessageBox.Show(message);
+                readerData.Close();
 
                 
 
@@ -88,12 +73,19 @@ namespace SQLWPF
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
+            ValidationMethod();
 
-            if (allNames.Contains(AccountNameField.Text))
+            if (allData.Contains(AccountNameField.Text) && allData.Contains(PasswordField.Password))
             {
                 MessageBox.Show("Success");
+                MainWindow mainwin = new MainWindow();
+                mainwin.Show();
+                this.Owner = mainwin;
+                this.Close();
+
             }
             else { MessageBox.Show("Wrong Account Name"); }
+            allData.Clear();
 
         }
     }
