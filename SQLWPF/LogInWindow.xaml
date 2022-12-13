@@ -29,6 +29,31 @@
             <UIElement.Effect>
                 <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
             </UIElement.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="39*"/>
+                    <RowDefinition Height="57*"/>
+                    <RowDefinition Height="49*"/>
+                    <RowDefinition Height="48*"/>
+                    <RowDefinition Height="95*"/>
+                    <RowDefinition Height="61*"/>
+                    <RowDefinition Height="162*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="124*"/>
+                    <ColumnDefinition Width="351*"/>
+                    <ColumnDefinition Width="136*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="1" Style="{StaticResource MaterialDesignLabel}" FontSize="24" FontWeight="Bold" HorizontalContentAlignment="Center" Margin="0,39,0,0" Grid.RowSpan="2">
+                    <AccessText TextWrapping="Wrap">
+                        Log in
+                    </AccessText>
+                </Label>
+                <TextBox materialDesign:HintAssist.Hint="Account name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="" Grid.RowSpan="2" Height="48" VerticalAlignment="Center" />
+
+
+
+            </Grid>
 
         </Border>
 
