@@ -20,6 +20,7 @@ using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using MaterialDesignThemes.Wpf;
 
 namespace SQLWPF
 {
@@ -60,15 +61,8 @@ namespace SQLWPF
                     allData.Add((string)readerData[0]);
                     allData.Add((string)readerData[1]);
                 }
-                var message = string.Join(Environment.NewLine, allData);
-                MessageBox.Show(message);
                 readerData.Close();
-
-                
-
-
             }
-            
         }
 
         private void Login_Click(object sender, RoutedEventArgs e)
@@ -77,16 +71,14 @@ namespace SQLWPF
 
             if (allData.Contains(AccountNameField.Text) && allData.Contains(PasswordField.Password))
             {
-                MessageBox.Show("Success");
+                
                 MainWindow mainwin = new MainWindow();
                 mainwin.Show();
                 this.Owner = mainwin;
                 this.Close();
-
             }
-            else { MessageBox.Show("Wrong Account Name"); }
+            else { MessageBox.Show("Wrong user name or password!"); }
             allData.Clear();
-
         }
     }
 }
