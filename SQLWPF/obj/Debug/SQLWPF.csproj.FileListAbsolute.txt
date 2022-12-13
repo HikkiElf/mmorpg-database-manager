@@ -23,3 +23,6 @@ E:\College projects\SQLWPF\SQLWPF\obj\Debug\App.baml
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\SQLWPF.csproj.CopyComplete
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\LogInWindow.g.cs
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\LogInWindow.baml
+E:\College projects\SQLWPF\SQLWPF\bin\Debug\Microsoft.Xaml.Behaviors.dll
+E:\College projects\SQLWPF\SQLWPF\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+E:\College projects\SQLWPF\SQLWPF\bin\Debug\Microsoft.Xaml.Behaviors.xml

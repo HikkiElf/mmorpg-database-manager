@@ -52,10 +52,10 @@
                     <TextBox Name="AccountNameField" materialDesign:HintAssist.Hint="Account name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="" Height="48" VerticalAlignment="Top" Margin="0,58,0,0" />
                     <PasswordBox Name="PasswordField" materialDesign:HintAssist.Hint="Enter password" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Grid.Column="1" Grid.Row="3" Height="48" VerticalAlignment="Center" />
                     <Grid Height="50">
-                        <Button HorizontalAlignment="Right" Content="Login" Background="DarkOrange" BorderBrush="{x:Null}"/>
+                        <Button HorizontalAlignment="Right" Content="Login" Background="DarkOrange" BorderBrush="{x:Null}" Click="Login_Click"/>
                     </Grid>
                     <Label Content="Don't have an account?" HorizontalAlignment="Center" Foreground="#66000000" />
-                    <Button Name="RegistrationButton" Style="{StaticResource MaterialDesignFlatButton}" Content="Registration" Width="115"/>
+                    <Button Name="RegistrationButton" Style="{StaticResource MaterialDesignFlatButton}" Content="Registration" Width="115" />
                 </StackPanel>
 
 
