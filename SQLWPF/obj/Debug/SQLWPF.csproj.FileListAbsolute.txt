@@ -21,3 +21,5 @@ E:\College projects\SQLWPF\SQLWPF\bin\Debug\MaterialDesignThemes.Wpf.pdb
 E:\College projects\SQLWPF\SQLWPF\bin\Debug\MaterialDesignThemes.Wpf.xml
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\App.baml
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\SQLWPF.csproj.CopyComplete
+E:\College projects\SQLWPF\SQLWPF\obj\Debug\LogInWindow.g.cs
+E:\College projects\SQLWPF\SQLWPF\obj\Debug\LogInWindow.baml

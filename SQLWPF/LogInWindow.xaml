@@ -4,9 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SQLWPF"
-        mc:Ignorable="d"
-        Title="LogInWindow" Height="450" Width="800">
-    <Grid>
         
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        
+        mc:Ignorable="d"
+        Title="LogInWindow" MinHeight="750" MinWidth="900" Height="750" Width="900" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="237*"/>
+            <ColumnDefinition Width="32*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height ="56*"/>
+            <RowDefinition Height="611*"/>
+            <RowDefinition Height="67*"/>
+        </Grid.RowDefinitions>
+        <Border x:Name="mainBorder" MinWidth="650" MinHeight="500" Background="#FFF8FFFF" Padding="40" CornerRadius="20" Grid.Row="1" Margin="10,10,10,10" Grid.Column="1">
+            <UIElement.Effect>
+                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
+            </UIElement.Effect>
+
+        </Border>
+
     </Grid>
 </Window>
