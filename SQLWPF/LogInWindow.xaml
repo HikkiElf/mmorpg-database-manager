@@ -31,25 +31,32 @@
             </UIElement.Effect>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="39*"/>
-                    <RowDefinition Height="57*"/>
-                    <RowDefinition Height="49*"/>
-                    <RowDefinition Height="48*"/>
-                    <RowDefinition Height="95*"/>
+                    <RowDefinition Height="72*"/>
                     <RowDefinition Height="61*"/>
-                    <RowDefinition Height="162*"/>
+                    <RowDefinition Height="323*"/>
+                    <RowDefinition Height="55*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="124*"/>
                     <ColumnDefinition Width="351*"/>
                     <ColumnDefinition Width="136*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" Style="{StaticResource MaterialDesignLabel}" FontSize="24" FontWeight="Bold" HorizontalContentAlignment="Center" Margin="0,39,0,0" Grid.RowSpan="2">
+
+                <Label Grid.Column="1" Style="{StaticResource MaterialDesignLabel}" FontSize="24" FontWeight="Bold" HorizontalContentAlignment="Center" Margin="0,2,0,0" Grid.Row="1">
                     <AccessText TextWrapping="Wrap">
                         Log in
                     </AccessText>
                 </Label>
-                <TextBox materialDesign:HintAssist.Hint="Account name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="" Grid.RowSpan="2" Height="48" VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,61,0,0" Grid.RowSpan="2">
+                    <TextBox Name="AccountNameField" materialDesign:HintAssist.Hint="Account name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Grid.Column="1" Grid.Row="2" TextWrapping="Wrap" Text="" Height="48" VerticalAlignment="Top" Margin="0,58,0,0" />
+                    <PasswordBox Name="PasswordField" materialDesign:HintAssist.Hint="Enter password" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Grid.Column="1" Grid.Row="3" Height="48" VerticalAlignment="Center" />
+                    <Grid Height="50">
+                        <Button HorizontalAlignment="Right" Content="Login" Background="DarkOrange" BorderBrush="{x:Null}"/>
+                    </Grid>
+                    <Label Content="Don't have an account?" HorizontalAlignment="Center" Foreground="#66000000" />
+                    <Button Name="RegistrationButton" Style="{StaticResource MaterialDesignFlatButton}" Content="Registration" Width="115"/>
+                </StackPanel>
 
 
 
