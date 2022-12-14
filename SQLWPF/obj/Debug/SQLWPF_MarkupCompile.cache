@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 E:\College projects\SQLWPF\SQLWPF\App.xaml
-22127186602
+4-68761233
 
-61604966160
+8698070787
 171965824775
-LogInWindow.xaml;MainWindow.xaml;
+LogInPage.xaml;LogInRegistrationWindow.xaml;MainWindow.xaml;RegistrationPage.xaml;
 
 False
 
