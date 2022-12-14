@@ -56,7 +56,7 @@
                     <PasswordBox Name="PasswordField" materialDesign:HintAssist.Hint="Enter password" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Grid.Column="1" Grid.Row="3" Height="48" VerticalAlignment="Center" />
                     <PasswordBox Name="RepeatPasswordField" materialDesign:HintAssist.Hint="Repeat password" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" Grid.Column="1" Grid.Row="3" Height="48" VerticalAlignment="Center" />
                     <Grid Height="50">
-                        <Button HorizontalAlignment="Right" Content="Registratoin" Background="DarkOrange" BorderBrush="{x:Null}" />
+                        <Button HorizontalAlignment="Right" Content="Registratoin" Background="DarkOrange" BorderBrush="{x:Null}" Click="Button_Click" />
                     </Grid>
                     <Label Content="Already have account?" HorizontalAlignment="Center" Foreground="#66000000" />
                     <Button Name="LogInButton" Style="{StaticResource MaterialDesignFlatButton}" Content="Log in" Width="115" Click="LogInButton_Click" />
