@@ -99,7 +99,7 @@ namespace SQLWPF
                         Connection = connection,
                         CommandText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}"
                     };
-                    if ((string)TablesCombo.SelectedValue == "Accounts Moderator")
+                    if ((string)TablesCombo.SelectedValue == "Accounts view")
                     {
                         banSelectedUser.ExecuteNonQuery();
                     }
@@ -146,7 +146,7 @@ namespace SQLWPF
                         Connection = connection,
                         CommandText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}"
                     };
-                    if ((string)TablesCombo.SelectedValue == "Accounts Moderator")
+                    if ((string)TablesCombo.SelectedValue == "Accounts view")
                     {
                         UnBanSelectedUser.ExecuteNonQuery();
                     }

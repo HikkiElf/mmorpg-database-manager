@@ -46,7 +46,7 @@ namespace SQLWPF
             SqlCommand command = new SqlCommand
             {
                 Connection = connection,
-                CommandText = $"SELECT * FROM {(string)TablesCombo.SelectedValue}"
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}]"
             };
             TablesView.ItemsSource = command.ExecuteReader();
 
@@ -182,7 +182,7 @@ namespace SQLWPF
             SqlCommand command = new SqlCommand
             {
                 Connection = connection,
-                CommandText = $"SELECT * FROM {(string)TablesCombo.SelectedValue}"
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}]"
             };
             TablesView.ItemsSource = command.ExecuteReader();
         }

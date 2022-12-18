@@ -72,6 +72,12 @@ namespace SQLWPF
                     modwin.Show();
                     pr.Owner = modwin;
                 }
+                else if (allData.Contains("1"))
+                {
+                    UserWindow userwin = new UserWindow();
+                    userwin.Show();
+                    pr.Owner = userwin;
+                }
 
                 else
                 {

@@ -32,3 +32,5 @@ E:\College projects\SQLWPF\SQLWPF\obj\Debug\LogInRegistrationWindow.baml
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\RegistrationPage.baml
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\ModeratorWindow.g.cs
 E:\College projects\SQLWPF\SQLWPF\obj\Debug\ModeratorWindow.baml
+E:\College projects\SQLWPF\SQLWPF\obj\Debug\UserWindow.g.cs
+E:\College projects\SQLWPF\SQLWPF\obj\Debug\UserWindow.baml
