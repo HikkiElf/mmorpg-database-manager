@@ -35,53 +35,18 @@ namespace SQLWPF
         public MainWindow()
         {
             InitializeComponent();
-            UpdateTableList();
-            for (int i = 0; i < 10; i++)
-            {
-                RadioButton radioButton = new RadioButton { Content = "Radio button" + i, IsChecked = i == 0};
-                //radioButton.Checked += (sender, args) =>
-                //{
-                //    MessageBox.Show("Pressed " + (sender as RadioButton).Tag);
-                //};
-                Style style = this.FindResource("MaterialDesignTabRadioButtonLeft") as Style;
-                radioButton.Style = style;
-                radioButton.Tag = i;
-
-                RadioStackPanel.Children.Add(radioButton);
-            }
-            //UpdateViewer();
+            UpdateTablesCombo();
         }
-
-        //private void Window_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
-        //    {
-        //        connectionStatusLabel.Content = "";
-        //        try
-        //        {
-        //            connection.Open();
-        //            connectionStatusLabel.Content = ("Connected! " + connection.Database);
-
-        //        }
-        //        catch (SqlException)
-        //        {
-
-        //        }
-        //        finally
-        //        {
-        //            if (connection.State == ConnectionState.Open)
-        //            {
+       
         //                connection.Close();
         //                backgroundWorker.DoWork += (s, fe) => { System.Threading.Thread.Sleep(3000); };
         //                backgroundWorker.RunWorkerCompleted += (s, fe) => { connectionStatusLabel.Content = "Disconnected..."; };
         //                backgroundWorker.RunWorkerAsync();
 
-        //            }
-        //        }
-        //    }
-        //}
-
-        private void UpdateTableList()
+        /// <summary>
+        /// Updating list of tables names in ComboBox "TablesCombo"
+        /// </summary>
+        private void UpdateTablesCombo()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
             {
@@ -105,6 +70,44 @@ namespace SQLWPF
             }
         }
 
+        private void BanUser()
+        {
+
+            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
+            connection.Open();
+
+
+          
+            var selectedCellInfo = TablesView.SelectedCells[0];
+            var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
+
+            SqlCommand banSelectedUser = new SqlCommand
+            {
+                Connection = connection,
+                CommandText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}"
+            };
+            if ((string)TablesCombo.SelectedValue == "Accounts")
+            {
+                banSelectedUser.ExecuteNonQuery();
+            }
+
+
+            //var message = string.Join(Environment.NewLine, content);
+                
+            //MessageBox.Show(content);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            BanUser();
+        }
+
+
+        /// <summary>
+        /// Change DataGrid "TablesView" ItemsSource when changing selected table name in ComboBox "TablesCombo"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TablesCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
@@ -115,46 +118,7 @@ namespace SQLWPF
                 Connection = connection,
                 CommandText = $"SELECT * FROM {(string)TablesCombo.SelectedValue}"
             };
-            ListHistory.ItemsSource = command.ExecuteReader();
-
+            TablesView.ItemsSource = command.ExecuteReader();
         }
     }
-
-
-        //private void UpdateViewer()
-        //{
-        //    //string table_name = (string)TablesCombo.SelectedValue;
-        //    string table_name = "Accounts";
-
-
-        //    using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
-        //    {
-        //        try
-        //        {
-        //            connection.Open();
-        //        }
-        //        catch(SqlException)
-        //        {
-        //            return;
-        //        }
-
-        //        SqlCommand command = new SqlCommand
-        //        {
-        //            CommandText = $"SELECT * FROM {table_name}",
-        //            Connection = connection
-
-        //        };
-
-        //        ListHistory.ItemsSource = command.ExecuteReader();
-
-        //        connection.Close();
-
-        //    }
-        //}
-
-
-        //private void ChanchedSelected(object sender, SelectionChangedEventArgs e)
-        //{
-        //    UpdateViewer();
-        //}
 }
