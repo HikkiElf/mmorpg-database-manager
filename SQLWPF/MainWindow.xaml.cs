@@ -36,6 +36,19 @@ namespace SQLWPF
         {
             InitializeComponent();
             UpdateTableList();
+            for (int i = 0; i < 10; i++)
+            {
+                RadioButton radioButton = new RadioButton { Content = "Radio button" + i, IsChecked = i == 0};
+                //radioButton.Checked += (sender, args) =>
+                //{
+                //    MessageBox.Show("Pressed " + (sender as RadioButton).Tag);
+                //};
+                Style style = this.FindResource("MaterialDesignTabRadioButtonLeft") as Style;
+                radioButton.Style = style;
+                radioButton.Tag = i;
+
+                RadioStackPanel.Children.Add(radioButton);
+            }
             //UpdateViewer();
         }
 

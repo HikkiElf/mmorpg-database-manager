@@ -13,9 +13,14 @@
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
         
-        Title="MMORPG db manager" Height="750" Width="900" WindowStyle="ThreeDBorderWindow" ResizeMode="NoResize">
+        Title="MMORPG db manager" Height="750" Width="1200" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResize">
     <Grid>
-        <Border Name="mainBorder" MinWidth="650" MinHeight="500" MaxHeight="600" MaxWidth="750" Margin="5,70,1,0" Background="#FFF8FFFF" VerticalAlignment="Top" Padding="40" CornerRadius="20" Height="614">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="366"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <Border Name="mainBorder" MinWidth="650" MinHeight="500" MaxHeight="600" MaxWidth="750" Margin="1,67,4,53" Background="#FFF8FFFF" Padding="40" CornerRadius="20" Grid.Column="1">
             <UIElement.Effect>
                 <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0" />
             </UIElement.Effect>
@@ -24,6 +29,17 @@
                 <DataGrid Name="ListHistory" HorizontalAlignment="Center" Height="333" Margin="0,46,0,0" VerticalAlignment="Top" Width="654" AutoGenerateColumns="True" Style="{StaticResource MaterialDesignDataGrid}" Background="#FFF8FFFF"/>
                 <ComboBox Name="TablesCombo" HorizontalAlignment="Left" Margin="460,16,0,0" VerticalAlignment="Top" Width="166" SelectionChanged="TablesCombo_SelectionChanged"/>
             </Grid>
+        </Border>
+
+        <Border Name="selectBorder" MinWidth="100" MinHeight="500" MaxHeight="600" MaxWidth="300" Background="#FFF8FFFF" Padding="20" CornerRadius="20" Grid.Column="0">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
+            </Border.Effect>
+            <StackPanel Name="RadioStackPanel">
+                <RadioButton Content="Something" Height="30" Style="{StaticResource MaterialDesignTabRadioButtonLeft}" />
+
+
+            </StackPanel>
         </Border>
     </Grid>
 </Window>
