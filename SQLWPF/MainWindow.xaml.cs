@@ -72,7 +72,7 @@ namespace SQLWPF
                 {
                     return;
                 }
-                string get_all_tables_sql = @"SELECT Distinct TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS";
+                string get_all_tables_sql = @"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where not TABLE_NAME in ('sysdiagrams') and not TABLE_TYPE = 'VIEW'";
                 SqlCommand command = new SqlCommand(get_all_tables_sql, connection);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())

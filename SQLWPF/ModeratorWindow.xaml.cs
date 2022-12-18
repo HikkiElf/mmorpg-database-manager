@@ -35,7 +35,7 @@ namespace SQLWPF
             SqlCommand command = new SqlCommand
             {
                 Connection = connection,
-                CommandText = $"SELECT * FROM {(string)TablesCombo.SelectedValue}"
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}]"
             };
             TablesView.ItemsSource = command.ExecuteReader();
 
@@ -61,7 +61,7 @@ namespace SQLWPF
                 {
                     return;
                 }
-                string get_all_tables_sql = @"SELECT Distinct TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS";
+                string get_all_tables_sql = @"select TABLE_NAME from INFORMATION_SCHEMA.VIEWS";
                 SqlCommand command = new SqlCommand(get_all_tables_sql, connection);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -99,12 +99,16 @@ namespace SQLWPF
                         Connection = connection,
                         CommandText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}"
                     };
-                    if ((string)TablesCombo.SelectedValue == "Accounts")
+                    if ((string)TablesCombo.SelectedValue == "Accounts Moderator")
                     {
                         banSelectedUser.ExecuteNonQuery();
                     }
                 }
                 catch (ArgumentOutOfRangeException)
+                {
+                    return;
+                }
+                catch (FormatException)
                 {
                     return;
                 }
@@ -137,14 +141,14 @@ namespace SQLWPF
                     var selectedCellInfo = TablesView.SelectedCells[0];
                     var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
 
-                    SqlCommand banSelectedUser = new SqlCommand
+                    SqlCommand UnBanSelectedUser = new SqlCommand
                     {
                         Connection = connection,
                         CommandText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}"
                     };
-                    if ((string)TablesCombo.SelectedValue == "Accounts")
+                    if ((string)TablesCombo.SelectedValue == "Accounts Moderator")
                     {
-                        banSelectedUser.ExecuteNonQuery();
+                        UnBanSelectedUser.ExecuteNonQuery();
                     }
 
 
@@ -153,6 +157,11 @@ namespace SQLWPF
                 {
                     return;
                 }
+                catch (FormatException)
+                {
+                    return;
+                }
+
                 connection.Close();
             }
 
@@ -171,7 +180,7 @@ namespace SQLWPF
             SqlCommand command = new SqlCommand
             {
                 Connection = connection,
-                CommandText = $"SELECT * FROM {(string)TablesCombo.SelectedValue}"
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}]"
             };
             TablesView.ItemsSource = command.ExecuteReader();
         }

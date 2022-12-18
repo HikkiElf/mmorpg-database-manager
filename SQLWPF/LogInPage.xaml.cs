@@ -71,7 +71,6 @@ namespace SQLWPF
                     ModeratorWindow modwin = new ModeratorWindow();
                     modwin.Show();
                     pr.Owner = modwin;
-                    pr.Close();
                 }
 
                 else
@@ -79,8 +78,8 @@ namespace SQLWPF
                     MainWindow mainwin = new MainWindow();
                     mainwin.Show();
                     pr.Owner = mainwin;
-                    pr.Close();
                 }
+                pr.Close();
             }
             else { MessageBox.Show("Wrong user name or password!"); }
             allData.Clear();
