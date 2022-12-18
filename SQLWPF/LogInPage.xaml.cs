@@ -43,7 +43,7 @@ namespace SQLWPF
                 SqlCommand takeData = new SqlCommand
                 {
                     Connection = connection,
-                    CommandText = $"SELECT accountName, accountPasswd FROM Accounts WHERE accountName = '{AccountNameField.Text}' and accountPasswd = '{PasswordField.Password}'"
+                    CommandText = $"SELECT accountName, accountPasswd, status_id FROM Accounts WHERE accountName = '{AccountNameField.Text}' and accountPasswd = '{PasswordField.Password}'"
                 };
 
                 SqlDataReader readerData = takeData.ExecuteReader();
@@ -51,7 +51,10 @@ namespace SQLWPF
                 {
                     allData.Add((string)readerData[0]);
                     allData.Add((string)readerData[1]);
+                    allData.Add(readerData[2].ToString());
                 }
+                var message = string.Join(Environment.NewLine, allData);
+                MessageBox.Show(message);
                 readerData.Close();
             }
         }
@@ -62,11 +65,22 @@ namespace SQLWPF
 
             if (allData.Contains(AccountNameField.Text) && allData.Contains(PasswordField.Password))
             {
-                MainWindow mainwin = new MainWindow();
-                mainwin.Show();
                 Window pr = Window.GetWindow(this);
-                pr.Owner = mainwin;
-                pr.Close();
+                if (allData.Contains("2"))
+                {
+                    ModeratorWindow modwin = new ModeratorWindow();
+                    modwin.Show();
+                    pr.Owner = modwin;
+                    pr.Close();
+                }
+
+                else
+                {
+                    MainWindow mainwin = new MainWindow();
+                    mainwin.Show();
+                    pr.Owner = mainwin;
+                    pr.Close();
+                }
             }
             else { MessageBox.Show("Wrong user name or password!"); }
             allData.Clear();
