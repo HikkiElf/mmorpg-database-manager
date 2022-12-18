@@ -116,8 +116,7 @@ namespace SQLWPF
 
 
 
-                var message = string.Join(Environment.NewLine ,allNames);
-                MessageBox.Show(message);
+                MessageBox.Show("Success");
 
 
             }

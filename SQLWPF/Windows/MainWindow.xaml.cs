@@ -30,7 +30,8 @@ namespace SQLWPF
     public partial class MainWindow : Window
     {
 
-        private BackgroundWorker backgroundWorker = new BackgroundWorker();
+        private int offsetNumber = 0;
+        private int currentPage = 1;
 
         public MainWindow()
         {
@@ -39,23 +40,47 @@ namespace SQLWPF
             UpdateTableView();
         }
 
+        private int getNumberOfRows()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
+            {
+                int count = 0;
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = $"SELECT COUNT(*) FROM [{(string)TablesCombo.SelectedValue}]"
+                };
+                connection.Open();
+                count = (int)command.ExecuteScalar();
+                connection.Close();
+                return count;
+            }
+        }
+
         private void UpdateTableView()
         {
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
             connection.Open();
-            SqlCommand command = new SqlCommand
+            if ((string)TablesCombo.SelectedValue == "Account_To_Character")
             {
-                Connection = connection,
-                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}]"
-            };
-            TablesView.ItemsSource = command.ExecuteReader();
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by account_id OFFSET {offsetNumber} rows fetch next 5 rows only"
+                };
+                TablesView.ItemsSource = command.ExecuteReader();
+            }
+            else
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by id OFFSET {offsetNumber} rows fetch next 5 rows only"
+                };
+                TablesView.ItemsSource = command.ExecuteReader();
+            }
 
         }
-
-        //                connection.Close();
-        //                backgroundWorker.DoWork += (s, fe) => { System.Threading.Thread.Sleep(3000); };
-        //                backgroundWorker.RunWorkerCompleted += (s, fe) => { connectionStatusLabel.Content = "Disconnected..."; };
-        //                backgroundWorker.RunWorkerAsync();
 
         /// <summary>
         /// Updating list of tables names in ComboBox "TablesCombo"
@@ -122,11 +147,6 @@ namespace SQLWPF
 
                 connection.Close();
             }
-
-
-            //var message = string.Join(Environment.NewLine, content);
-
-            //MessageBox.Show(content);
         }
         private void UnBanUser()
         {
@@ -176,15 +196,10 @@ namespace SQLWPF
         /// <param name="e"></param>
         private void TablesCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
-            connection.Open();
-            TableName.Text = (string)TablesCombo.SelectedValue;
-            SqlCommand command = new SqlCommand
-            {
-                Connection = connection,
-                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}]"
-            };
-            TablesView.ItemsSource = command.ExecuteReader();
+            offsetNumber = 0;
+            currentPage = 1;
+            CurrentPageLabel.Content = currentPage.ToString();
+            UpdateTableView();
         }
 
         private void BanButton_Click(object sender, RoutedEventArgs e)
@@ -196,6 +211,28 @@ namespace SQLWPF
         private void UnbanButton_Click(object sender, RoutedEventArgs e)
         {
             UnBanUser();
+            UpdateTableView();
+        }
+
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (offsetNumber < getNumberOfRows() - 5)
+            {
+                offsetNumber += 5;
+                currentPage += 1;
+                CurrentPageLabel.Content = (currentPage).ToString();
+            }
+            UpdateTableView();
+        }
+
+        private void PrevPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (offsetNumber > 0)
+            {
+                offsetNumber -= 5;        
+                currentPage -= 1;
+                CurrentPageLabel.Content = (currentPage).ToString();              
+            }
             UpdateTableView();
         }
     }

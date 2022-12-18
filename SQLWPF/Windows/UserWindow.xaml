@@ -44,6 +44,7 @@
                 <ComboBox Name="TablesCombo" HorizontalAlignment="Center"  Width="166" SelectionChanged="TablesCombo_SelectionChanged" Grid.Column="1" Height="28"/>
                 <Button Name="NextPage" Content="Next" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingActionButton}" Click="NextPage_Click"/>
                 <Button Name="PrevPage" Content="Back" Grid.Column="0" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingActionButton}" Click="PrevPage_Click"/>
+                <Label Name="CurrentPageLabel" Content="1" Grid.Row="2" Grid.Column="0" Margin="10,10,0,0" FontSize="22" HorizontalAlignment="Left" Width="94" Height="48" VerticalAlignment="Top"/>
             </Grid>
         </Border>
     </Grid>

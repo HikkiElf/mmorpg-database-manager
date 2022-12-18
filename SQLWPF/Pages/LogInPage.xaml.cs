@@ -43,7 +43,7 @@ namespace SQLWPF
                 SqlCommand takeData = new SqlCommand
                 {
                     Connection = connection,
-                    CommandText = $"SELECT accountName, accountPasswd, status_id FROM Accounts WHERE accountName = '{AccountNameField.Text}' and accountPasswd = '{PasswordField.Password}'"
+                    CommandText = $"SELECT accountName, accountPasswd, status_id, isBanned FROM Accounts WHERE accountName = '{AccountNameField.Text}' and accountPasswd = '{PasswordField.Password}'"
                 };
 
                 SqlDataReader readerData = takeData.ExecuteReader();
@@ -52,9 +52,13 @@ namespace SQLWPF
                     allData.Add((string)readerData[0]);
                     allData.Add((string)readerData[1]);
                     allData.Add(readerData[2].ToString());
+                    if (readerData[3] != DBNull.Value)
+                    {
+                        allData.Add((string)readerData[3]);
+                    }
                 }
-                var message = string.Join(Environment.NewLine, allData);
-                MessageBox.Show(message);
+                //var message = string.Join(Environment.NewLine, allData);
+                //MessageBox.Show(message);
                 readerData.Close();
             }
         }
@@ -62,8 +66,14 @@ namespace SQLWPF
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             ValidationMethod();
+            if (allData.Contains("true"))
+            {
+                MessageBox.Show("VAC BAN");
+                allData.Clear();
+                return;
+            }
 
-            if (allData.Contains(AccountNameField.Text) && allData.Contains(PasswordField.Password))
+            else if (allData.Contains(AccountNameField.Text) && allData.Contains(PasswordField.Password))
             {
                 Window pr = Window.GetWindow(this);
                 if (allData.Contains("2"))

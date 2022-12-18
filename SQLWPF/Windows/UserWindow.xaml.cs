@@ -22,6 +22,7 @@ namespace SQLWPF
     public partial class UserWindow : Window
     {
         private int offsetNumber = 0;
+        private int currentPage = 1;
 
 
         public UserWindow()
@@ -47,6 +48,7 @@ namespace SQLWPF
                 return count;
             }
         }
+
         private void UpdateTableView()
         {
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
@@ -112,14 +114,18 @@ namespace SQLWPF
         private void TablesCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             offsetNumber = 0;
+            currentPage = 1;
+            CurrentPageLabel.Content = currentPage.ToString();
             UpdateTableView();
         }
 
         private void NextPage_Click(object sender, RoutedEventArgs e)
         {
-            if (offsetNumber < getNumberOfRows() - offsetNumber)
+            if (offsetNumber < getNumberOfRows() - 5)
             {
                 offsetNumber += 5;
+                currentPage += 1;
+                CurrentPageLabel.Content = (currentPage).ToString();
             }
             UpdateTableView();
         }
@@ -129,6 +135,8 @@ namespace SQLWPF
             if (offsetNumber > 0)
             {
                 offsetNumber -= 5;
+                currentPage -= 1;
+                CurrentPageLabel.Content = (currentPage).ToString();
             }
             UpdateTableView();
         }
