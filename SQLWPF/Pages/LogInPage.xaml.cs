@@ -106,5 +106,10 @@ namespace SQLWPF
             Window pr = Window.GetWindow(this);
             pr.Content = new RegistrationPage();
         }
+
+        private void AccountNameField_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
