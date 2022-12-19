@@ -13,7 +13,7 @@
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
         
-       Title="MMORPG db manager" MinHeight="800" MinWidth="800" Height="800" Width="800" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+       Title="MMORPG db manager" MinHeight="800" MinWidth="800" Height="800" Width="800" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" Icon="/icon.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="53*"/>

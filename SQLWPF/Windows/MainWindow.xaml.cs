@@ -348,9 +348,6 @@ namespace SQLWPF
 
         private void InsertRegion_Click(object sender, RoutedEventArgs e)
         {
-            //TextBox textBox = (TextBoxesStack.Children[0]) as TextBox;
-            var message = (TextBoxesStack.Children[0] as TextBox).Text;
-            MessageBox.Show(message);
             if ((string)TablesCombo.SelectedValue == "Regions")
             {
                 using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -366,6 +363,7 @@ namespace SQLWPF
                     connection.Close();
                 }
             }
+            UpdateTableView();
 
         }
 
