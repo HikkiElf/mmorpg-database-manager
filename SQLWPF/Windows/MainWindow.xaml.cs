@@ -75,7 +75,7 @@ namespace SQLWPF
 
         private void UpdateTableView()
         {
-            TextBoxesStack.Children.Clear();
+            
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
             connection.Open();
                
@@ -91,25 +91,35 @@ namespace SQLWPF
 
         private void AutoCreateTextBoxes()
         {
+            TextBoxesStack.Children.Clear();
+
+            if((string)TablesCombo.SelectedValue == "Account_To_Character")
+            {
+                return;
+            }
 
             for (int i = 0; i < getNumberOfColumns() - 1; i++)
             {
                 TextBox textBox = new TextBox() { Name = "txtBox" + i.ToString(), Width = 120, };
-                MaterialDesignThemes.Wpf.HintAssist.SetHint(textBox, "Hello");
                 Style style = this.FindResource("MaterialDesignFloatingHintTextBox") as Style;
                 textBox.Style = style;
                 textBox.Tag = i;
                 TextBoxesStack.Children.Add(textBox);
             }
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
-            {
-                try
-                {
-                    connection.Open();
-                }
+            getNamesOfColumns();
 
-                catch (SqlException) { return; }
+                for(int i = 0; i < getNamesOfColumns().Count; i++)
+                {
+                    MaterialDesignThemes.Wpf.HintAssist.SetHint((DependencyObject)TextBoxesStack.Children[i], getNamesOfColumns()[i]);
+                }
+            }
+
+        private List<string> getNamesOfColumns()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
+            {            
+                connection.Open();
 
                 SqlCommand selectAllColums = new SqlCommand
                 {
@@ -124,14 +134,12 @@ namespace SQLWPF
                 }
                 columnReader.Close();
 
-                cols.RemoveAt(0);
+                connection.Close();
 
-                for(int i = 0; i < cols.Count; i++)
-                {
-                    MaterialDesignThemes.Wpf.HintAssist.SetHint((DependencyObject)TextBoxesStack.Children[i], cols[i]);
-                }
+                cols.RemoveAt(0);
+                return cols;
             }
-        }
+    }
 
 
         /// <summary>
@@ -161,7 +169,7 @@ namespace SQLWPF
             }
         }
 
-        private void DeleteRegion()
+        private void DeleteRow()
         {
 
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -191,8 +199,7 @@ namespace SQLWPF
                     catch (SqlException)
                     {
                         MessageBox.Show("files integrity is in danger");
-                    }
-       
+                    }      
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -329,7 +336,7 @@ namespace SQLWPF
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            DeleteRegion();
+            DeleteRow();
             UpdateTableView();
         }
     }
