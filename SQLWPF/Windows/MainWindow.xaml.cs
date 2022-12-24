@@ -69,7 +69,7 @@ namespace SQLWPF
                 connection.Open();
                 count = (int)command.ExecuteScalar();
                 connection.Close();
-                return count - 1;
+                return count;
             }
         }
 
@@ -78,48 +78,30 @@ namespace SQLWPF
             TextBoxesStack.Children.Clear();
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
             connection.Open();
-            if ((string)TablesCombo.SelectedValue == "Account_To_Character")
+               
+            SqlCommand command = new SqlCommand
             {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by account_id OFFSET {offsetNumber} rows fetch next 5 rows only"
-                };
-                TablesView.ItemsSource = command.ExecuteReader();
-            }
-            else
-            {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by id OFFSET {offsetNumber} rows fetch next 5 rows only"
-                };
-                TablesView.ItemsSource = command.ExecuteReader();
-            }
-
+                Connection = connection,
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by 1 OFFSET {offsetNumber} rows fetch next 5 rows only"
+            };
+            TablesView.ItemsSource = command.ExecuteReader();
             
+            AutoCreateTextBoxes();
+        }
 
-            for (int i = 0; i < getNumberOfColumns(); i++)
+        private void AutoCreateTextBoxes()
+        {
+
+            for (int i = 0; i < getNumberOfColumns() - 1; i++)
             {
-                TextBox textBox = new TextBox() { Name = "txtBox" + i.ToString(), Width = 80,  };
+                TextBox textBox = new TextBox() { Name = "txtBox" + i.ToString(), Width = 120, };
                 MaterialDesignThemes.Wpf.HintAssist.SetHint(textBox, "Hello");
                 Style style = this.FindResource("MaterialDesignFloatingHintTextBox") as Style;
                 textBox.Style = style;
                 textBox.Tag = i;
                 TextBoxesStack.Children.Add(textBox);
             }
-            foreach (var item in TextBoxesStack.Children)
-            {
-                MaterialDesignThemes.Wpf.HintAssist.SetHint((DependencyObject)item, "What");
-            }
 
-            AllCols();
-
-
-        }
-
-        private void AllCols()
-        {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
             {
                 try
@@ -187,27 +169,30 @@ namespace SQLWPF
                 try
                 {
                     connection.Open();
-
                 }
                 catch (SqlException)
                 {
                     return;
                 }
-
                 try
                 {
                     var selectedCellInfo = TablesView.SelectedCells[0];
                     var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
 
-                    SqlCommand banSelectedUser = new SqlCommand
+                    SqlCommand deleteSelected = new SqlCommand
                     {
                         Connection = connection,
-                        CommandText = $"DELETE FROM Regions where id = {Int32.Parse(selectedCellValue)}"
+                        CommandText = $"DELETE FROM [{(string)TablesCombo.SelectedValue}] where id = {Int32.Parse(selectedCellValue)}"
                     };
-                    if ((string)TablesCombo.SelectedValue == "Regions")
+                    try
                     {
-                        banSelectedUser.ExecuteNonQuery();
+                        deleteSelected.ExecuteNonQuery();
                     }
+                    catch (SqlException)
+                    {
+                        MessageBox.Show("files integrity is in danger");
+                    }
+       
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -218,6 +203,9 @@ namespace SQLWPF
             }
         }
 
+        /// <summary>
+        /// Change isBanned status of selected user by selected id in DataGrid
+        /// </summary>
         private void BanUser()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -261,7 +249,6 @@ namespace SQLWPF
                         {
                             commandBanText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}";
                         }
-
                         SqlCommand banSelectedUser = new SqlCommand
                         {
                             Connection = connection,
