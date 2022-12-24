@@ -196,7 +196,6 @@ namespace SQLWPF
 
                 try
                 {
-
                     var selectedCellInfo = TablesView.SelectedCells[0];
                     var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
 
@@ -221,13 +220,11 @@ namespace SQLWPF
 
         private void BanUser()
         {
-
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
             {
                 try
                 {
                     connection.Open();
-
                 }
                 catch (SqlException)
                 {
@@ -236,28 +233,60 @@ namespace SQLWPF
 
                 try
                 {
-
                     var selectedCellInfo = TablesView.SelectedCells[0];
                     var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
 
-                    SqlCommand banSelectedUser = new SqlCommand
+                    string isBannedStatus = "";
+
+                    SqlCommand getIsBannedStatus = new SqlCommand
                     {
                         Connection = connection,
-                        CommandText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}"
+                        CommandText = $"SELECT isBanned from Accounts where id = {Int32.Parse(selectedCellValue)}"
                     };
-                    if ((string)TablesCombo.SelectedValue == "Accounts")
+
+                    SqlDataReader readerIsBannedSatus = getIsBannedStatus.ExecuteReader();
+                    while (readerIsBannedSatus.Read())
                     {
-                        banSelectedUser.ExecuteNonQuery();
+                        isBannedStatus = readerIsBannedSatus[0].ToString();
+                        var message = string.Join(Environment.NewLine, isBannedStatus);
+                        MessageBox.Show(message);
                     }
+                    readerIsBannedSatus.Close();
+
+                    if (isBannedStatus == "")
+                    {                        
+                        SqlCommand banSelectedUser = new SqlCommand
+                        {
+                            Connection = connection,
+                            CommandText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}"
+                        };
+                        if ((string)TablesCombo.SelectedValue == "Accounts")
+                        {
+                            banSelectedUser.ExecuteNonQuery();
+                        }
+                    }
+                    else
+                    {
+                        SqlCommand banSelectedUser = new SqlCommand
+                        {
+                            Connection = connection,
+                            CommandText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}"
+                        };
+                        if ((string)TablesCombo.SelectedValue == "Accounts")
+                        {
+                            banSelectedUser.ExecuteNonQuery();
+                        }
+                    }
+
                 }
-                catch(ArgumentOutOfRangeException)
+                catch (ArgumentOutOfRangeException)
                 {
                     return;
                 }
-
                 connection.Close();
             }
         }
+
         private void UnBanUser()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
