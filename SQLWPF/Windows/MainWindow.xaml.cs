@@ -20,6 +20,7 @@ using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 
 namespace SQLWPF
@@ -106,15 +107,16 @@ namespace SQLWPF
                 textBox.Tag = i;
                 TextBoxesStack.Children.Add(textBox);
             }
-
-            getNamesOfColumns();
-
-                for(int i = 0; i < getNamesOfColumns().Count; i++)
-                {
-                    MaterialDesignThemes.Wpf.HintAssist.SetHint((DependencyObject)TextBoxesStack.Children[i], getNamesOfColumns()[i]);
-                }
+            for(int i = 0; i < getNamesOfColumns().Count; i++)
+            {
+                MaterialDesignThemes.Wpf.HintAssist.SetHint((DependencyObject)TextBoxesStack.Children[i], getNamesOfColumns()[i]);
             }
+        }
 
+        /// <summary>
+        /// return List<string> of columns name except first column
+        /// </summary>
+        /// <returns></returns>
         private List<string> getNamesOfColumns()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -137,6 +139,7 @@ namespace SQLWPF
                 connection.Close();
 
                 cols.RemoveAt(0);
+
                 return cols;
             }
     }
@@ -215,46 +218,48 @@ namespace SQLWPF
         /// </summary>
         private void BanUser()
         {
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
+            if ((string)TablesCombo.SelectedValue == "Accounts")
             {
-                try
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
                 {
-                    connection.Open();
-                }
-                catch (SqlException)
-                {
-                    return;
-                }
-                try
-                {
-                    var selectedCellInfo = TablesView.SelectedCells[0];
-                    var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
-
-                    string isBannedStatus = "";
-                    string commandBanText = "";
-
-                    SqlCommand getIsBannedStatus = new SqlCommand
+                    try
                     {
-                        Connection = connection,
-                        CommandText = $"SELECT isBanned from Accounts where id = {Int32.Parse(selectedCellValue)}"
-                    };
-
-                    SqlDataReader readerIsBannedSatus = getIsBannedStatus.ExecuteReader();
-                    while (readerIsBannedSatus.Read())
-                    {
-                        isBannedStatus = readerIsBannedSatus[0].ToString();
+                        connection.Open();
                     }
-                    readerIsBannedSatus.Close();
-
-                    if ((string)TablesCombo.SelectedValue == "Accounts")
+                    catch (SqlException)
                     {
+                        return;
+                    }
+                    try
+                    {
+                        var selectedCellInfo = TablesView.SelectedCells[0];
+                        var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
+
+                        string isBannedStatus = "";
+                        string commandBanText = "";
+
+                        SqlCommand getIsBannedStatus = new SqlCommand
+                        {
+                            Connection = connection,
+                            CommandText = $"SELECT isBanned from Accounts where id = {selectedCellValue}"
+                        };
+
+                        SqlDataReader readerIsBannedSatus = getIsBannedStatus.ExecuteReader();
+                        while (readerIsBannedSatus.Read())
+                        {
+                            isBannedStatus = readerIsBannedSatus[0].ToString();
+                        }
+                        readerIsBannedSatus.Close();
+
+
+
                         if (isBannedStatus == "")
                         {
-                            commandBanText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}";
+                            commandBanText = $"UPDATE Accounts SET isBanned = 'true' where id = {selectedCellValue}";
                         }
                         else
                         {
-                            commandBanText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}";
+                            commandBanText = $"UPDATE Accounts SET isBanned = NULL where id = {selectedCellValue}";
                         }
                         SqlCommand banSelectedUser = new SqlCommand
                         {
@@ -263,13 +268,65 @@ namespace SQLWPF
                         };
                         banSelectedUser.ExecuteNonQuery();
                     }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        return;
+                    }
+                    connection.Close();
                 }
-                catch (ArgumentOutOfRangeException)
+            }
+        }
+
+        private void InsertRow()
+        {
+            if ((string)TablesCombo.SelectedValue == "Account_To_Character")
+            {
+                return;
+            }
+            string commandText = "";
+            
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand sqlCommand = new SqlCommand();
+
+                for (int i = 0; i < getNumberOfColumns() - 1; i++)
                 {
-                    return;
+                    MessageBox.Show((TextBoxesStack.Children[i] as TextBox).Text);
+                    if((TextBoxesStack.Children[i] as TextBox).Text == "")
+                    {
+                        (TextBoxesStack.Children[i] as TextBox).Text = "NULL";
+                    }
                 }
+
+                for (int i = 0; i < getNumberOfColumns() - 1; i++)
+                {
+                    if (i == 0)
+                    {
+                        commandText = $"INSERT INTO [{(string)TablesCombo.SelectedValue}] ({getNamesOfColumns()[i]}) VALUES ('{(TextBoxesStack.Children[i] as TextBox).Text}')";
+                    }
+                    else
+                    {
+                        if (Regex.IsMatch((TextBoxesStack.Children[i] as TextBox).Text, @"^[0-9]*$") || (TextBoxesStack.Children[i] as TextBox).Text == "NULL")
+                        {
+                            commandText = $"UPDATE [{(string)TablesCombo.SelectedValue}] set {getNamesOfColumns()[i]} = {(TextBoxesStack.Children[i] as TextBox).Text} WHERE id = (SELECT TOP 1 id FROM [{(string)TablesCombo.SelectedValue}] ORDER BY 1 DESC)";              
+                        }
+                        else
+                        {
+                            commandText = $"UPDATE [{(string)TablesCombo.SelectedValue}] set {getNamesOfColumns()[i]} = '{(TextBoxesStack.Children[i] as TextBox).Text}' WHERE id = (SELECT TOP 1 id FROM [{(string)TablesCombo.SelectedValue}] ORDER BY 1 DESC)";
+                        }
+                    }
+                    sqlCommand = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = commandText
+                    };
+                    sqlCommand.ExecuteNonQuery();
+                }
+                
                 connection.Close();
             }
+            
         }
 
         /// <summary>
@@ -315,21 +372,7 @@ namespace SQLWPF
 
         private void InsertRegion_Click(object sender, RoutedEventArgs e)
         {
-            if ((string)TablesCombo.SelectedValue == "Regions")
-            {
-                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
-                {
-                    SqlCommand sqlCommand = new SqlCommand
-                    {
-                        Connection = connection,
-                        CommandText = $"INSERT INTO [{(string)TablesCombo.SelectedValue}] VALUES ('{(TextBoxesStack.Children[0] as TextBox).Text}')",
-                    };
-
-                    connection.Open();
-                    sqlCommand.ExecuteNonQuery();
-                    connection.Close();
-                }
-            }
+            InsertRow();
             UpdateTableView();
 
         }
