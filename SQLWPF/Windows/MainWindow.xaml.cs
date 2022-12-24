@@ -230,13 +230,13 @@ namespace SQLWPF
                 {
                     return;
                 }
-
                 try
                 {
                     var selectedCellInfo = TablesView.SelectedCells[0];
                     var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
 
                     string isBannedStatus = "";
+                    string commandBanText = "";
 
                     SqlCommand getIsBannedStatus = new SqlCommand
                     {
@@ -248,36 +248,27 @@ namespace SQLWPF
                     while (readerIsBannedSatus.Read())
                     {
                         isBannedStatus = readerIsBannedSatus[0].ToString();
-                        var message = string.Join(Environment.NewLine, isBannedStatus);
-                        MessageBox.Show(message);
                     }
                     readerIsBannedSatus.Close();
 
-                    if (isBannedStatus == "")
-                    {                        
-                        SqlCommand banSelectedUser = new SqlCommand
-                        {
-                            Connection = connection,
-                            CommandText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}"
-                        };
-                        if ((string)TablesCombo.SelectedValue == "Accounts")
-                        {
-                            banSelectedUser.ExecuteNonQuery();
-                        }
-                    }
-                    else
+                    if ((string)TablesCombo.SelectedValue == "Accounts")
                     {
+                        if (isBannedStatus == "")
+                        {
+                            commandBanText = $"UPDATE Accounts SET isBanned = 'true' where id = {Int32.Parse(selectedCellValue)}";
+                        }
+                        else
+                        {
+                            commandBanText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}";
+                        }
+
                         SqlCommand banSelectedUser = new SqlCommand
                         {
                             Connection = connection,
-                            CommandText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}"
+                            CommandText = commandBanText
                         };
-                        if ((string)TablesCombo.SelectedValue == "Accounts")
-                        {
-                            banSelectedUser.ExecuteNonQuery();
-                        }
+                        banSelectedUser.ExecuteNonQuery();
                     }
-
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -285,47 +276,6 @@ namespace SQLWPF
                 }
                 connection.Close();
             }
-        }
-
-        private void UnBanUser()
-        {
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
-            {
-                try
-                {
-                    connection.Open();
-
-                }
-                catch(SqlException) 
-                { 
-                    return; 
-                }
-
-                try
-                {
-
-                    var selectedCellInfo = TablesView.SelectedCells[0];
-                    var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
-
-                    SqlCommand banSelectedUser = new SqlCommand
-                    {
-                        Connection = connection,
-                        CommandText = $"UPDATE Accounts SET isBanned = NULL where id = {Int32.Parse(selectedCellValue)}"
-                    };
-                    if ((string)TablesCombo.SelectedValue == "Accounts")
-                    {
-                        banSelectedUser.ExecuteNonQuery();
-                    }
-                
-
-                }
-                catch(ArgumentOutOfRangeException)
-                {
-                    return;
-                }
-                connection.Close();
-            }
-            
         }
 
         /// <summary>
@@ -344,12 +294,6 @@ namespace SQLWPF
         private void BanButton_Click(object sender, RoutedEventArgs e)
         {
             BanUser();
-            UpdateTableView();
-        }
-
-        private void UnbanButton_Click(object sender, RoutedEventArgs e)
-        {
-            UnBanUser();
             UpdateTableView();
         }
 
