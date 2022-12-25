@@ -142,7 +142,7 @@ namespace SQLWPF
 
                 return cols;
             }
-    }
+        }
 
 
         /// <summary>
@@ -329,6 +329,38 @@ namespace SQLWPF
             
         }
 
+        private void AutoInsertIntoTextBoxes()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                }
+                catch (SqlException) { return; }
+                var selectedCellInfo = TablesView.SelectedCells[0];
+                var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
+
+                SqlCommand getDataFromRow = new SqlCommand
+                {
+                    Connection = connection,
+                    CommandText = $"SELECT * FROM {(string)TablesCombo.SelectedValue} where id = {selectedCellValue}"
+                };
+
+                SqlDataReader readData = getDataFromRow.ExecuteReader();
+                while (readData.Read())
+                {
+                    for (int i = 1; i < getNumberOfColumns(); i++)
+                    {
+                        (TextBoxesStack.Children[i - 1] as TextBox).Text = readData[i].ToString();
+                    }
+                }
+                connection.Close();
+            }
+            
+        }
+
         /// <summary>
         /// Change DataGrid "TablesView" ItemsSource when changing selected table name in ComboBox "TablesCombo"
         /// </summary>
@@ -381,6 +413,11 @@ namespace SQLWPF
         {
             DeleteRow();
             UpdateTableView();
+        }
+
+        private void DataGridCell_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            AutoInsertIntoTextBoxes();           
         }
     }
 }
