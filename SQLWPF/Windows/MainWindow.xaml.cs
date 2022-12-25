@@ -289,14 +289,20 @@ namespace SQLWPF
             {
                 connection.Open();
                 SqlCommand sqlCommand = new SqlCommand();
+                int countEmptyTextBoxes = 0;
 
                 for (int i = 0; i < getNumberOfColumns() - 1; i++)
                 {
-                    MessageBox.Show((TextBoxesStack.Children[i] as TextBox).Text);
                     if((TextBoxesStack.Children[i] as TextBox).Text == "")
                     {
                         (TextBoxesStack.Children[i] as TextBox).Text = "NULL";
+                        countEmptyTextBoxes++;
                     }
+                }
+
+                if(countEmptyTextBoxes == TextBoxesStack.Children.Count)
+                {
+                    return;
                 }
 
                 for (int i = 0; i < getNumberOfColumns() - 1; i++)
@@ -357,8 +363,65 @@ namespace SQLWPF
                     }
                 }
                 connection.Close();
+            }           
+        }
+
+        private void UpdateRow()
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                }
+                catch(SqlException) { return; }
+
+                for (int i = 0; i < getNumberOfColumns() - 1; i++)
+                {
+                    if ((TextBoxesStack.Children[i] as TextBox).Text == "")
+                    {
+                        (TextBoxesStack.Children[i] as TextBox).Text = "NULL";
+                    }
+                }
+
+                string commandText = "";
+
+                try
+                {
+
+                    var selectedCellInfo = TablesView.SelectedCells[0];
+                    var selectedCellColumn = selectedCellInfo.Column.Header;
+                    var selectedCellValue = (selectedCellInfo.Column.GetCellContent(selectedCellInfo.Item) as TextBlock).Text;
+
+                    if ((string)selectedCellColumn != "id")
+                    {
+                        return;
+                    }
+
+                    for (int i = 0; i < getNumberOfColumns() - 1; i++)
+                    {
+                        if (Regex.IsMatch((TextBoxesStack.Children[i] as TextBox).Text, @"^[0-9]*$") || (TextBoxesStack.Children[i] as TextBox).Text == "NULL")
+                        {
+                            commandText = $"UPDATE [{(string)TablesCombo.SelectedValue}] set {getNamesOfColumns()[i]} = {(TextBoxesStack.Children[i] as TextBox).Text} WHERE id = {selectedCellValue}";
+                        }
+                        else
+                        {
+                            commandText = $"UPDATE [{(string)TablesCombo.SelectedValue}] set {getNamesOfColumns()[i]} = '{(TextBoxesStack.Children[i] as TextBox).Text}' WHERE id = {selectedCellValue}";
+                        }
+                        SqlCommand updateRow = new SqlCommand
+                        {
+                            Connection = connection,
+                            CommandText = commandText
+                        };
+                        updateRow.ExecuteNonQuery();
+                    }
+                }
+                catch(ArgumentOutOfRangeException) { return; }
+                
+                connection.Close();
+
+
             }
-            
         }
 
         /// <summary>
@@ -402,7 +465,7 @@ namespace SQLWPF
             UpdateTableView();
         }
 
-        private void InsertRegion_Click(object sender, RoutedEventArgs e)
+        private void Insert_Click(object sender, RoutedEventArgs e)
         {
             InsertRow();
             UpdateTableView();
@@ -419,5 +482,13 @@ namespace SQLWPF
         {
             AutoInsertIntoTextBoxes();           
         }
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateRow();
+            UpdateTableView();
+        }
+
+       
     }
 }
