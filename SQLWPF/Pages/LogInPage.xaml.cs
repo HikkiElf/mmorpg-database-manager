@@ -57,8 +57,6 @@ namespace SQLWPF
                         allData.Add((string)readerData[3]);
                     }
                 }
-                //var message = string.Join(Environment.NewLine, allData);
-                //MessageBox.Show(message);
                 readerData.Close();
             }
         }

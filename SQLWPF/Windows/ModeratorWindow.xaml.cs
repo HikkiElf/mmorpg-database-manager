@@ -51,31 +51,16 @@ namespace SQLWPF
         {
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
             connection.Open();
-            if ((string)TablesCombo.SelectedValue == "Accounts and Characters")
+            
+            SqlCommand command = new SqlCommand
             {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by accountName OFFSET {offsetNumber} rows fetch next 5 rows only"
-                };
-                TablesView.ItemsSource = command.ExecuteReader();
-            }
-            else
-            {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by id OFFSET {offsetNumber} rows fetch next 5 rows only"
-                };
-                TablesView.ItemsSource = command.ExecuteReader();
-            }
-
+                Connection = connection,
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by 1 OFFSET {offsetNumber} rows fetch next 5 rows only"
+            };
+            TablesView.ItemsSource = command.ExecuteReader();
+         
+            TableName.Text = (string)TablesCombo.SelectedValue;
         }
-
-        //                connection.Close();
-        //                backgroundWorker.DoWork += (s, fe) => { System.Threading.Thread.Sleep(3000); };
-        //                backgroundWorker.RunWorkerCompleted += (s, fe) => { connectionStatusLabel.Content = "Disconnected..."; };
-        //                backgroundWorker.RunWorkerAsync();
 
         /// <summary>
         /// Updating list of tables names in ComboBox "TablesCombo"
@@ -146,11 +131,6 @@ namespace SQLWPF
 
                 connection.Close();
             }
-
-
-            //var message = string.Join(Environment.NewLine, content);
-
-            //MessageBox.Show(content);
         }
         private void UnBanUser()
         {

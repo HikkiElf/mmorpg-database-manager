@@ -53,25 +53,15 @@ namespace SQLWPF
         {
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString);
             connection.Open();
-            if ((string)TablesCombo.SelectedValue == "Accounts and Characters")
-            {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by accountName OFFSET {offsetNumber} rows fetch next 5 rows only"
-                };
-                TablesView.ItemsSource = command.ExecuteReader();
-            }
-            else
-            {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by id OFFSET {offsetNumber} rows fetch next 5 rows only"
-                };
-                TablesView.ItemsSource = command.ExecuteReader();
-            }
 
+            SqlCommand command = new SqlCommand
+            {
+                Connection = connection,
+                CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by 1 OFFSET {offsetNumber} rows fetch next 5 rows only"
+            };
+            TablesView.ItemsSource = command.ExecuteReader();
+
+            TableName.Text = (string)TablesCombo.SelectedValue;
         }
 
         //                connection.Close();

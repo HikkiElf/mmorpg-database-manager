@@ -40,6 +40,10 @@ namespace SQLWPF
             UpdateTablesCombo();
         }
 
+        /// <summary>
+        /// Return number of rows in table
+        /// </summary>
+        /// <returns>int number</returns>
         private int getNumberOfRows()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -57,6 +61,10 @@ namespace SQLWPF
             }
         }
 
+        /// <summary>
+        /// Return number of columns in table
+        /// </summary>
+        /// <returns>int number</returns>
         private int getNumberOfColumns()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -74,6 +82,9 @@ namespace SQLWPF
             }
         }
 
+        /// <summary>
+        /// Change DataGrid ItemSource to current selected table
+        /// </summary>
         private void UpdateTableView()
         {
             
@@ -86,10 +97,15 @@ namespace SQLWPF
                 CommandText = $"SELECT * FROM [{(string)TablesCombo.SelectedValue}] order by 1 OFFSET {offsetNumber} rows fetch next 5 rows only"
             };
             TablesView.ItemsSource = command.ExecuteReader();
+            TableName.Text = (string)TablesCombo.SelectedValue;
             
             AutoCreateTextBoxes();
         }
 
+
+        /// <summary>
+        /// Auto create text boxes for insert and update rows
+        /// </summary>
         private void AutoCreateTextBoxes()
         {
             TextBoxesStack.Children.Clear();
@@ -114,7 +130,7 @@ namespace SQLWPF
         }
 
         /// <summary>
-        /// return List<string> of columns name except first column
+        /// Return List<string> of columns name except first column
         /// </summary>
         /// <returns></returns>
         private List<string> getNamesOfColumns()
@@ -172,6 +188,9 @@ namespace SQLWPF
             }
         }
 
+        /// <summary>
+        /// Delete row by selected id number in DataGrid
+        /// </summary>
         private void DeleteRow()
         {
 
@@ -277,6 +296,9 @@ namespace SQLWPF
             }
         }
 
+        /// <summary>
+        /// Insert new row in Database
+        /// </summary>
         private void InsertRow()
         {
             if ((string)TablesCombo.SelectedValue == "Account_To_Character")
@@ -335,6 +357,9 @@ namespace SQLWPF
             
         }
 
+        /// <summary>
+        /// Double click on id of a row auto insert data in text boxes
+        /// </summary>
         private void AutoInsertIntoTextBoxes()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -366,6 +391,10 @@ namespace SQLWPF
             }           
         }
 
+
+        /// <summary>
+        /// Update selected by id row in DataGrid
+        /// </summary>
         private void UpdateRow()
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["mmorpgdb"].ConnectionString))
@@ -437,12 +466,22 @@ namespace SQLWPF
             UpdateTableView();
         }
 
+        /// <summary>
+        /// Ban/Unban selected user when clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BanButton_Click(object sender, RoutedEventArgs e)
         {
             BanUser();
             UpdateTableView();
         }
 
+        /// <summary>
+        /// Go to next page when clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NextPage_Click(object sender, RoutedEventArgs e)
         {
             if (offsetNumber < getNumberOfRows() - 5)
@@ -454,6 +493,11 @@ namespace SQLWPF
             UpdateTableView();
         }
 
+        /// <summary>
+        /// Go to previous page when clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PrevPage_Click(object sender, RoutedEventArgs e)
         {
             if (offsetNumber > 0)
@@ -465,6 +509,11 @@ namespace SQLWPF
             UpdateTableView();
         }
 
+        /// <summary>
+        /// Insert new row in table when clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Insert_Click(object sender, RoutedEventArgs e)
         {
             InsertRow();
@@ -472,17 +521,32 @@ namespace SQLWPF
 
         }
 
+        /// <summary>
+        /// Delete selected row by id when clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             DeleteRow();
             UpdateTableView();
         }
 
+        /// <summary>
+        /// Auto insert data from row in text boxes by selected id doubleclicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataGridCell_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             AutoInsertIntoTextBoxes();           
         }
 
+        /// <summary>
+        /// Update row data by selected id when clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateRow();
